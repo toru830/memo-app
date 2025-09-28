@@ -1,25 +1,44 @@
 import React from 'react';
-import { 
-  Home, 
-  CheckSquare, 
-  Lightbulb, 
-  ShoppingCart, 
+import {
+  Home,
+  CheckSquare,
+  Lightbulb,
+  ShoppingCart,
   Heart,
   Plus,
-  Mic
+  Mic,
+  type LucideIcon,
 } from 'lucide-react';
 
-export type TabType = 'all' | 'tasks' | 'ideas' | 'shopping' | 'thoughts' | 'add' | 'voice';
+export type TabType = 'all' | 'tasks' | 'ideas' | 'shopping' | 'thoughts';
 
 interface TabNavigationProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  onAddClick: () => void;
+  onVoiceClick: () => void;
+  isAddActive?: boolean;
+  isVoiceActive?: boolean;
 }
 
-export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
-  const tabs = [
+export const TabNavigation: React.FC<TabNavigationProps> = ({
+  activeTab,
+  onTabChange,
+  onAddClick,
+  onVoiceClick,
+  isAddActive = false,
+  isVoiceActive = false,
+}) => {
+  const tabs: Array<{
+    id: TabType;
+    label: string;
+    icon: LucideIcon;
+    color: string;
+    activeColor: string;
+    bgColor: string;
+  }> = [
     {
-      id: 'all' as TabType,
+      id: 'all',
       label: 'すべて',
       icon: Home,
       color: 'text-gray-400',
@@ -27,7 +46,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
       bgColor: 'bg-blue-600/20',
     },
     {
-      id: 'tasks' as TabType,
+      id: 'tasks',
       label: 'タスク',
       icon: CheckSquare,
       color: 'text-gray-400',
@@ -35,7 +54,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
       bgColor: 'bg-green-600/20',
     },
     {
-      id: 'ideas' as TabType,
+      id: 'ideas',
       label: 'アイデア',
       icon: Lightbulb,
       color: 'text-gray-400',
@@ -43,7 +62,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
       bgColor: 'bg-yellow-600/20',
     },
     {
-      id: 'shopping' as TabType,
+      id: 'shopping',
       label: '買い物',
       icon: ShoppingCart,
       color: 'text-gray-400',
@@ -51,7 +70,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
       bgColor: 'bg-orange-600/20',
     },
     {
-      id: 'thoughts' as TabType,
+      id: 'thoughts',
       label: '思い',
       icon: Heart,
       color: 'text-gray-400',
@@ -61,51 +80,52 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gray-800/50 z-50">
-      <div className="flex justify-around items-center py-2 px-4">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 ${
-                isActive 
-                  ? `${tab.bgColor} ${tab.activeColor} scale-105` 
-                  : `${tab.color} hover:bg-gray-800`
-              }`}
-            >
-              <Icon size={24} />
-            </button>
-          );
-        })}
-        
-        {/* 追加ボタン */}
-        <div className="flex gap-2">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-4 pt-10 pb-6 bg-gradient-to-t from-black via-black/60 to-transparent">
+      <div className="pointer-events-auto relative mx-auto max-w-2xl">
+        <div className="pointer-events-auto absolute -top-12 left-1/2 flex -translate-x-1/2 gap-3">
           <button
-            onClick={() => onTabChange('add')}
-            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 ${
-              activeTab === 'add'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white scale-110 shadow-lg'
-                : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-105 shadow-md'
+            onClick={onAddClick}
+            className={`flex items-center justify-center w-14 h-14 rounded-full transition-all duration-200 ${
+              isAddActive
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white scale-105 shadow-xl'
+                : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-105 shadow-lg'
             }`}
           >
-            <Plus size={20} />
+            <Plus size={22} />
           </button>
           <button
-            onClick={() => onTabChange('voice')}
-            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 ${
-              activeTab === 'voice'
-                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white scale-110 shadow-lg'
-                : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:scale-105 shadow-md'
+            onClick={onVoiceClick}
+            className={`flex items-center justify-center w-14 h-14 rounded-full transition-all duration-200 ${
+              isVoiceActive
+                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white scale-105 shadow-xl'
+                : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:scale-105 shadow-lg'
             }`}
           >
-            <Mic size={20} />
+            <Mic size={22} />
           </button>
         </div>
+
+        <div className="pointer-events-auto flex items-center justify-between rounded-3xl border border-gray-800/60 bg-black/95 px-3 py-4 backdrop-blur-xl shadow-[0_12px_30px_rgba(0,0,0,0.45)]">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-200 ${
+                  isActive
+                    ? `${tab.bgColor} ${tab.activeColor} scale-105`
+                    : `${tab.color} hover:bg-gray-800`
+                }`}
+              >
+                <Icon size={22} />
+              </button>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };

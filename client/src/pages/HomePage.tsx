@@ -120,11 +120,16 @@ export const HomePage: React.FC = () => {
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
-    if (tab === 'add') {
-      setShowForm(true);
-    } else if (tab === 'voice') {
-      setShowVoiceInput(true);
-    }
+  };
+
+  const handleAddClick = () => {
+    setShowVoiceInput(false);
+    setShowForm(true);
+  };
+
+  const handleVoiceClick = () => {
+    setShowForm(false);
+    setShowVoiceInput(true);
   };
 
   const handleQuickCreate = (category: string, isTask: boolean) => {
@@ -348,7 +353,14 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* タブナビゲーション */}
-      <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+      <TabNavigation
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        onAddClick={handleAddClick}
+        onVoiceClick={handleVoiceClick}
+        isAddActive={showForm && !showVoiceInput}
+        isVoiceActive={showVoiceInput}
+      />
     </div>
   );
 };
